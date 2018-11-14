@@ -24,14 +24,28 @@ class SiteLock
             return $next($request);
         }
 
-        if (in_array(request()->getClientIp(), config('site-lock.allowed-ips'))) {
+        if ($this->ipIsAllowed()) {
             return $next($request);
         }
 
-        if (request()->getRequestUri() === ltrim(config('site-lock.access-url'), '/')) {
+        if (ltrim(request()->getRequestUri(), '/') === ltrim(config('site-lock.access-url'), '/')) {
             return $next($request);
         }
 
         return response(config('site-lock.error-message'), 401);
+    }
+
+    private function ipIsAllowed(): bool
+    {
+        $allowedIps = config('site-lock.allowed-ips');
+        if (! $allowedIps) {
+            return false;
+        }
+
+        if (is_string($allowedIps)) {
+            $allowedIps = array_map('trim', explode(',', $allowedIps));
+        }
+
+        return in_array(request()->getClientIp(), (array) $allowedIps);
     }
 }

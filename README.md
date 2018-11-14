@@ -63,7 +63,29 @@ protected $middlewareGroups = [
 
 When added, all routes are locked if the request is on a matching environment.
 
-You can now gain access your site by visiting `/force-access` (url can be changed via config)
+### Gain access via url
+You can now gain access your site by visiting `/force-access` (url can be changed via config) 
+
+### Gain access via IP
+You can add allowed IP addresses in the `allowed-ips` config variable. You can either use a comma separated string:
+```
+ 'allowed-ips' => '127.0.0.1,192.168.0.1'
+```
+or use an array:
+```
+'allowed-ips' => [
+    '127.0.0.1',
+    '192.168.0.1'
+]
+```
+To change allowed IPs without changing code, you can use your own `env`-variable, eg. `SITE_LOCK_ALLOWED_IPS`:
+```
+'allowed-ips' => env('SITE_LOCK_ALLOWED_IPS')
+```
+And set them in your `.env`:
+```
+SITE_LOCK_ALLOWED_IPS="127.0.0.1, 192.168.0.1"
+```
 
 ## Testing
 
