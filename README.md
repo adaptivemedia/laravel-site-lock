@@ -1,4 +1,4 @@
-# SiteLock - prevent access to a site
+# SiteLock - prevent access to your site
 
 Sometimes you don't want anybody to access your site. Use cases include:
 
@@ -64,7 +64,7 @@ protected $middlewareGroups = [
 When added, all routes are locked if the request is on a matching environment.
 
 ### Gain access via url
-You can now gain access your site by visiting `/force-access` (url can be changed via config) 
+You can now gain access your site by visiting `/force-access`
 
 ### Gain access via IP
 You can add allowed IP addresses in the `allowed-ips` config variable. You can either use a comma separated string:

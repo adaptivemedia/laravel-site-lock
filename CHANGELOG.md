@@ -1,7 +1,7 @@
 # Changelog
 
-All notable changes to `laravel-external-logging` will be documented in this file
+All notable changes to `laravel-site-lock` will be documented in this file
 
-## 0.0.1 - 2018-05-03
+## 0.1 - 2018-11-16
 
 - initial release
