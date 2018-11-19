@@ -16,17 +16,7 @@ You can install the package via composer:
 composer require adaptivemedia/laravel-site-lock
 ```
 
-If you're on Laravel 5.5 or below, you must register the service provider:
-
-```php
-// config/app.php
-'providers' => [
-    ...
-    Adaptivemedia\SiteLock\SiteLockServiceProvider::class,
-];
-```
-
-You can optionally publish the config file with:
+You *MUST* publish the config file with:
 
 ```bash
 php artisan vendor:publish --provider="Adaptivemedia\SiteLock\SiteLockServiceProvider" --tag="config"
@@ -38,13 +28,49 @@ This is the content of the config file:
 <?php
 
 return [
-    'envs'          => ['staging', 'development'],
-    'allowed-ips'   => [],
-    'access-url'    => '/force-access',
+
+    /*
+     * This is the master switch to enable site lock.
+     */
+    'enabled' => env('SITE_LOCK_ENABLED', true),
+
+    /*
+     * Environments that the site lock should be applied to.
+     */
+    'environments' => ['staging', 'development'],
+
+    /*
+     * The following IP's will automatically gain access to the
+     * app without having to visit the `access-url` url.
+     */
+    'allowed-ips' => [],
+
+    /*
+     * The url that will unlock the site.
+     */
+    'access-url' => '/change-this-url-to-your-own',
+
+    /*
+     * After having gained access, visitors will be redirected to this url.
+     */
     'redirect-url'  => '/',
+
+    /*
+     * The session key that holds the site lock.
+     */
     'session-key'   => 'site-lock',
+
+    /*
+     * Error message displayed for users without access.
+     */
     'error-message' => 'Access denied',
+
+    /*
+     * HTTP response for users without access.
+     */
+    'error-http-response' => 401,
 ];
+
 ```
 
 ## Usage
@@ -55,7 +81,7 @@ Add the middleware to the `$middlewareGroups` array in `App\Http\Kernel.php`:
 protected $middlewareGroups = [
     'web' => [
         ...
-        \Adaptivemedia\SiteLock\Middleware\SiteLock::class,
+        \Adaptivemedia\SiteLock\SiteLock::class,
         ...
     ]
 ]
@@ -64,7 +90,7 @@ protected $middlewareGroups = [
 When added, all routes are locked if the request is on a matching environment.
 
 ### Gain access via url
-You can now gain access your site by visiting `/force-access`
+You can now gain access your site by visiting the configured url.
 
 ### Gain access via IP
 You can add allowed IP addresses in the `allowed-ips` config variable. You can either use a comma separated string:
@@ -86,6 +112,9 @@ And set them in your `.env`:
 ```
 SITE_LOCK_ALLOWED_IPS="127.0.0.1, 192.168.0.1"
 ```
+
+### Disable site lock
+If you don't want to enable site lock, just set the env variable `SITE_LOCK_ENABLED` to false.
 
 ## Testing
 

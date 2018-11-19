@@ -18,8 +18,6 @@ class SiteLockServiceProvider extends ServiceProvider
                 __DIR__.'/../config/site-lock.php' => config_path('site-lock.php'),
             ], 'config');
         }
-
-        $this->mergeConfigFrom(__DIR__.'/../config/site-lock.php', 'site-lock');
     }
 
     public function register()
