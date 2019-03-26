@@ -19,7 +19,7 @@ return [
     'allowed-ips' => [],
 
     /*
-     * The url that will unlock the site.
+     * The url that will unlock the site. Can be `false` to ignore url access
      */
     'access-url' => '/change-this-url-to-your-own',
 

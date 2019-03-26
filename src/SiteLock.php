@@ -64,6 +64,12 @@ class SiteLock
 
     private function urlIsAccessUrl(Request $request): bool
     {
-        return ltrim($request->getRequestUri(), '/') === ltrim($this->config['access-url'], '/');
+        $accessUrl = $this->config['access-url'];
+
+        if ($accessUrl === false) {
+            return false;
+        }
+
+        return ltrim($request->getRequestUri(), '/') === ltrim($accessUrl, '/');
     }
 }

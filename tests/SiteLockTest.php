@@ -42,6 +42,13 @@ class SiteLockTest extends TestCase
         $this->assertCanVisitSecretUrl($allowedIps[0]);
     }
 
+    /** @test */
+    public function a_user_cannot_access_site_if_access_url_is_false()
+    {
+        app('config')->set('site-lock.access-url', false);
+        $this->assertCannotVisitSecretUrl();
+    }
+
     protected function getWithIp(string $uri, string $ip): TestResponse
     {
         return $this->call('GET', $uri, [], [], [], ['REMOTE_ADDR' => $ip]);
