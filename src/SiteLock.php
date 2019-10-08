@@ -81,7 +81,7 @@ class SiteLock
     {
         $whitelistedUrls = array_map(function ($url) {
             return ltrim($url, '/');
-        }, $this->config['whitelisted-urls']);
+        }, $this->config['whitelisted-urls'] ?? []);
 
         if (count($whitelistedUrls) === 0) {
             return false;
