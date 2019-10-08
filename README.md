@@ -48,7 +48,7 @@ return [
     /*
      * List of urls that are whitelisted
      */
-    'whitelisted_urls' => [],
+    'whitelisted-urls' => [],
     
     /*
      * The url that will unlock the site.
