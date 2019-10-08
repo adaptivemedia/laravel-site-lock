@@ -6,7 +6,7 @@ Sometimes you don't want anybody to access your site. Use cases include:
 - Site is on a staging/testing server
 - Site is an internal tool
 
-This package adds a global web middleware that protects all routes until it's unlocked by visiting a pre defined url.
+This package adds a global web middleware that protects all routes until it's unlocked.
 
 ## Installation
 
@@ -45,6 +45,11 @@ return [
      */
     'allowed-ips' => [],
 
+    /*
+     * List of urls that are whitelisted
+     */
+    'whitelisted-urls' => [],
+    
     /*
      * The url that will unlock the site.
      */
@@ -87,7 +92,8 @@ protected $middlewareGroups = [
 ]
 ```
 
-When added, all routes are locked if the request is on a matching environment.
+When added, all routes are locked if the request is on a matching environment. You can also assign this middleware to specific routes
+by adding an alias to the `$routeMiddleware` variable and then attaching that alias to a route. 
 
 ### Gain access via url
 You can now gain access your site by visiting the configured url.
@@ -111,6 +117,15 @@ To change allowed IPs without changing code, you can use your own `env`-variable
 And set them in your `.env`:
 ```
 SITE_LOCK_ALLOWED_IPS="127.0.0.1, 192.168.0.1"
+```
+
+### Whitelist urls
+You can whitelist individual urls so they are excluded from the middleware. A common use case could
+be a hook url that a third party service is calling in your app.
+```
+'whitelisted-urls' => [
+    '/webhook-callback-url',
+],
 ```
 
 ### Disable site lock

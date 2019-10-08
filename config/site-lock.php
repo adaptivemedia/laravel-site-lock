@@ -19,6 +19,11 @@ return [
     'allowed-ips' => [],
 
     /*
+     * List of urls that are whitelisted.
+     */
+    'whitelisted-urls' => [],
+
+    /*
      * The url that will unlock the site. Can be `false` to ignore url access
      */
     'access-url' => '/change-this-url-to-your-own',
