@@ -39,7 +39,15 @@ class SiteLockTest extends TestCase
 
         $this->app['config']->set('site-lock.allowed-ips', $allowedIps);
 
-        $this->assertCanVisitSecretUrl($allowedIps[0]);
+        $this->assertCanVisitSecretUrl('/locked-url', $allowedIps[0]);
+    }
+
+    /** @test */
+    public function a_user_can_access_url_when_url_is_whitelisted()
+    {
+        app('config')->set('site-lock.whitelisted-urls', ['locked-url']);
+        $this->assertCanVisitSecretUrl();
+        $this->assertCannotVisitSecretUrl('another-locked-url');
     }
 
     /** @test */
@@ -49,21 +57,21 @@ class SiteLockTest extends TestCase
         $this->assertCannotVisitSecretUrl();
     }
 
-    protected function getWithIp(string $uri, string $ip): TestResponse
+    protected function getWithIp($uri, $ip): TestResponse
     {
         return $this->call('GET', $uri, [], [], [], ['REMOTE_ADDR' => $ip]);
     }
 
-    protected function assertCanVisitSecretUrl(string $ip = '127.0.0.1')
+    protected function assertCanVisitSecretUrl($url = '/locked-url', $ip = '127.0.0.1')
     {
-        $this->getWithIp('/locked-url', $ip)
+        $this->getWithIp($url, $ip)
             ->assertStatus(200)
             ->assertSee('locked');
     }
 
-    protected function assertCannotVisitSecretUrl(string $ip = '127.0.0.1')
+    protected function assertCannotVisitSecretUrl($url = '/locked-url', $ip = '127.0.0.1')
     {
-        $this->getWithIp('/locked-url', $ip)
+        $this->getWithIp($url, $ip)
             ->assertStatus($this->config['error-http-response']);
     }
 }

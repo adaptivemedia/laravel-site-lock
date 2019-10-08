@@ -45,6 +45,10 @@ class SiteLock
             return $next($request);
         }
 
+        if ($this->urlIsWhitelisted($request)) {
+            return $next($request);
+        }
+
         return response($this->config['error-message'], $this->config['error-http-response']);
     }
 
@@ -71,5 +75,18 @@ class SiteLock
         }
 
         return ltrim($request->getRequestUri(), '/') === ltrim($accessUrl, '/');
+    }
+
+    private function urlIsWhitelisted(Request $request): bool
+    {
+        $whitelistedUrls = array_map(function ($url) {
+            return ltrim($url, '/');
+        }, $this->config['whitelisted-urls']);
+
+        if (count($whitelistedUrls) === 0) {
+            return false;
+        }
+
+        return in_array(ltrim($request->getRequestUri(), '/'), $whitelistedUrls);
     }
 }

@@ -68,5 +68,12 @@ class TestCase extends Orchestra
                 return 'locked';
             },
         ]);
+
+        Route::any('/another-locked-url', [
+            'middleware' => ['web', 'siteLock'],
+            function () {
+                return 'locked';
+            },
+        ]);
     }
 }
