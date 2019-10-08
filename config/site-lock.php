@@ -19,7 +19,7 @@ return [
     'allowed-ips' => [],
 
     /*
-     * List of urls that are whitelisted
+     * List of urls that are whitelisted.
      */
     'whitelisted-urls' => [],
 
