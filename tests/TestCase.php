@@ -69,7 +69,7 @@ class TestCase extends Orchestra
             },
         ]);
 
-        Route::any('/another-locked-url', [
+        Route::any('/api/another-locked-url', [
             'middleware' => ['web', 'siteLock'],
             function () {
                 return 'locked';

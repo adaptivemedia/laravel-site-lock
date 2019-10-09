@@ -47,7 +47,12 @@ class SiteLockTest extends TestCase
     {
         app('config')->set('site-lock.whitelisted-urls', ['locked-url']);
         $this->assertCanVisitSecretUrl();
-        $this->assertCannotVisitSecretUrl('another-locked-url');
+        $this->assertCannotVisitSecretUrl('api/another-locked-url');
+
+        // Wildcard example
+        app('config')->set('site-lock.whitelisted-urls', ['api/another-*']);
+        $this->assertCanVisitSecretUrl('api/another-locked-url');
+        $this->assertCannotVisitSecretUrl();
     }
 
     /** @test */

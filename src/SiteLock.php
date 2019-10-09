@@ -5,6 +5,7 @@ namespace Adaptivemedia\SiteLock;
 use Closure;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class SiteLock
 {
@@ -80,13 +81,15 @@ class SiteLock
     private function urlIsWhitelisted(Request $request): bool
     {
         $whitelistedUrls = array_map(function ($url) {
-            return ltrim($url, '/');
+            return trim($url, '/');
         }, $this->config['whitelisted-urls'] ?? []);
 
         if (count($whitelistedUrls) === 0) {
             return false;
         }
 
-        return in_array(ltrim($request->getRequestUri(), '/'), $whitelistedUrls);
+        $requestUrl = trim($request->getRequestUri(), '/');
+
+        return Str::is($whitelistedUrls, $requestUrl);
     }
 }

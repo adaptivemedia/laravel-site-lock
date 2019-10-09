@@ -20,6 +20,12 @@ return [
 
     /*
      * List of urls that are whitelisted.
+     *
+     * Examples:
+     * /a-webhook-url
+     * a-webhook-url
+     * api/a-webhook-url
+     * api/a-webhook-*
      */
     'whitelisted-urls' => [],
 
