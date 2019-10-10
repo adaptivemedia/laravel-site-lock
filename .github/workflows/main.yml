@@ -1,0 +1,18 @@
+name: CI
+
+on: push
+
+jobs:
+  phpunit-tests:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Install dependencies
+      run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-scripts --no-progress
+    - name: Disable xdebug
+      run: sudo phpdismod -s cli xdebug
+    - name: Run tests
+      run: composer test
