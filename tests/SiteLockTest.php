@@ -3,16 +3,17 @@
 namespace Adaptivemedia\SiteLock\Tests;
 
 use Illuminate\Testing\TestResponse;
+use PHPUnit\Framework\Attributes\Test;
 
 class SiteLockTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function a_user_cannot_access_url_when_enabled()
     {
         $this->assertCannotVisitSecretUrl();
     }
 
-    /** @test */
+    #[Test]
     public function a_user_can_access_url_when_disabled()
     {
         $this->app['config']->set('site-lock.enabled', false);
@@ -20,7 +21,7 @@ class SiteLockTest extends TestCase
         $this->assertCanVisitSecretUrl();
     }
 
-    /** @test */
+    #[Test]
     public function a_user_can_access_url_when_site_is_unlocked_via_url()
     {
         $this
@@ -30,7 +31,7 @@ class SiteLockTest extends TestCase
         $this->assertCanVisitSecretUrl();
     }
 
-    /** @test */
+    #[Test]
     public function a_user_can_access_url_when_ip_is_allowed()
     {
         $allowedIps = ['192.0.0.1', '200.0.0.1'];
@@ -42,7 +43,7 @@ class SiteLockTest extends TestCase
         $this->assertCanVisitSecretUrl('/locked-url', $allowedIps[0]);
     }
 
-    /** @test */
+    #[Test]
     public function a_user_can_access_url_when_url_is_whitelisted()
     {
         app('config')->set('site-lock.whitelisted-urls', ['locked-url']);
@@ -55,7 +56,7 @@ class SiteLockTest extends TestCase
         $this->assertCannotVisitSecretUrl();
     }
 
-    /** @test */
+    #[Test]
     public function a_user_cannot_access_site_if_access_url_is_false()
     {
         app('config')->set('site-lock.access-url', false);
