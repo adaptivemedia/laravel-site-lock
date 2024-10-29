@@ -20,8 +20,8 @@ class SiteLock
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -64,7 +64,19 @@ class SiteLock
             $allowedIps = array_map('trim', explode(',', $allowedIps));
         }
 
-        return in_array($request->getClientIp(), (array) $allowedIps);
+        $clientIp = $request->getClientIp();
+
+        // Loop over each IP and check if the request IP is in the list of allowed IPs
+        // OR if it's within the range specified.
+        foreach ($allowedIps as $allowedIp) {
+            if (str_contains($allowedIp, '/') && $this->ipInRange($clientIp, $allowedIp)) {
+                return true;
+            } elseif ($clientIp === $allowedIp) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function urlIsAccessUrl(Request $request): bool
@@ -91,5 +103,21 @@ class SiteLock
         $requestUrl = trim($request->getRequestUri(), '/');
 
         return Str::is($whitelistedUrls, $requestUrl);
+    }
+
+    private function ipInRange(string $ip, string $allowed): bool
+    {
+        if (! strpos($allowed, '/')) {
+            $allowed .= '/32';
+        }
+
+        // $allowed is in IP/CIDR format eg 127.0.0.1/24
+        [$allowed, $netmask] = explode('/', $allowed, 2);
+        $range_decimal = ip2long($allowed);
+        $ip_decimal = ip2long($ip);
+        $wildcard_decimal = pow(2, (32 - $netmask)) - 1;
+        $netmask_decimal = ~$wildcard_decimal;
+
+        return (($ip_decimal & $netmask_decimal) == ($range_decimal & $netmask_decimal));
     }
 }

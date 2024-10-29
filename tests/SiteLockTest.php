@@ -44,6 +44,21 @@ class SiteLockTest extends TestCase
     }
 
     #[Test]
+    public function a_user_can_access_url_when_ip_is_within_allowed_range()
+    {
+        $allowedIps = ['192.0.0.0/24']; // means 192.0.0.0 -> 192.0.0.255
+
+        $this->assertCannotVisitSecretUrl();
+
+        $this->app['config']->set('site-lock.allowed-ips', $allowedIps);
+
+        $this->assertCanVisitSecretUrl('/locked-url', '192.0.0.0');
+        $this->assertCanVisitSecretUrl('/locked-url', '192.0.0.255');
+        $this->assertCannotVisitSecretUrl('/locked-url', '192.0.0.256');
+        $this->assertCannotVisitSecretUrl('/locked-url', '192.0.1.1');
+    }
+
+    #[Test]
     public function a_user_can_access_url_when_url_is_whitelisted()
     {
         app('config')->set('site-lock.whitelisted-urls', ['locked-url']);
